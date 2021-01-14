@@ -19,10 +19,16 @@ class Time:
 
     TIME EXPRESSION ARITHMETIC
 
-      The following operations are legal: Addition, Subtraction, Multiplication, Division.
-      Addition and Subtraction must be applied to another Time Expression.
-      Multiplication and Division must be applied to positive Integers or Floats.
+      The following operations are legal:
 
+        * Addition
+        * Subtraction
+        * Multiplication
+        * Division.
+
+      Addition and Subtraction must be applied to another Time Expression.
+      Multiplication and Division must be applied to positive Integers
+      or Floats.
 
     EXAMPLES
 
@@ -38,9 +44,10 @@ class Time:
         > 0:0:666
         = 00:11:06
     """
-    def __init__(self, ts = '::'):
+
+    def __init__(self, ts='::'):
         t = ts.split(':')
-        self.hour   = int(t[0]) if t[0] else 0
+        self.hour = int(t[0]) if t[0] else 0
         self.minute = int(t[1]) if t[1] else 0
         self.second = int(t[2]) if t[2] else 0
         self.fmt = '{:0>2}:{:0>2}:{:0>2}'

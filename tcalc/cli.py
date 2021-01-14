@@ -9,7 +9,7 @@ from .exception import ParseError
 def get_args():
     parser = argparse.ArgumentParser()
     parser.prog = 'tcalc'
-    parser.formatter_class=argparse.RawDescriptionHelpFormatter
+    parser.formatter_class = argparse.RawDescriptionHelpFormatter
     parser.description = 'Calculate with Time Expressions'
     parser.add_argument('expr', type=str,
                         help='a time expression')
@@ -24,7 +24,7 @@ def get_args():
 def main():
     args = get_args()
     expr = tokenize(args.expr)
-    
+
     if args.postfix:
         calc = calc_postfix
     else:
@@ -35,7 +35,7 @@ def main():
     except ParseError as err:
         sys.stderr.write('{}\n'.format(err))
         return 1
-    except ZeroDivisionError as err:
+    except ZeroDivisionError:
         sys.stderr.write('Divison by Zero!\n')
         return 2
 
@@ -45,3 +45,4 @@ def main():
 
 if __name__ == '__main__':
     sys.exit(main())
+

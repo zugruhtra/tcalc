@@ -1,13 +1,12 @@
-from .token import tokenize
 from .exception import ParseError
 
 
 PRECEDENCE = {
-    '+': 1,
-    '-': 1,
-    '*': 2,
-    '/': 2,
-}
+        '+': 1,
+        '-': 1,
+        '*': 2,
+        '/': 2,
+        }
 
 
 def precedenc(token):
@@ -40,7 +39,8 @@ def bin_compute(left, operator, right):
     elif operator == '/':
         return left / right
     else:
-        raise NotImplementedError('Operator "{}" not implemented'.format(operator))
+        raise NotImplementedError(
+                'Operator "{}" not implemented'.format(operator))
 
 
 def shunting_yard(expr):
@@ -49,9 +49,8 @@ def shunting_yard(expr):
         if is_number(token) or is_time(token):
             yield token
         elif is_binop(token):
-            while len(stack) != 0 \
-            and is_binop(stack[-1]) \
-            and precedenc(token) <= precedenc(stack[-1]):
+            while len(stack) != 0 and is_binop(stack[-1]) \
+                    and precedenc(token) <= precedenc(stack[-1]):
                 yield stack.pop()
             stack.append(token)
         elif is_seperator(token):
@@ -86,3 +85,4 @@ def calc_postfix(expr):
 
 def calc_infix(expr):
     return calc_postfix(shunting_yard(expr))
+

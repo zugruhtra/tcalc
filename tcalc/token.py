@@ -6,15 +6,16 @@ from .expression import Time
 
 
 TOKEN_SPEC = (
-    ('TIME',      r'\d*:\d*:\d*'),
-    ('NUMBER',    r'\d+(\.\d*)?'),
-    ('OPERATOR',  r'[+\-*/]'),
-    ('SEPERATOR', r'[\(\)]'),
-    ('SKIP',      r'[ \t]+'),
-    ('MISMATCH',  r'.'),
-)
+        ('TIME',      r'\d*:\d*:\d*'),
+        ('NUMBER',    r'\d+(\.\d*)?'),
+        ('OPERATOR',  r'[+\-*/]'),
+        ('SEPERATOR', r'[\(\)]'),
+        ('SKIP',      r'[ \t]+'),
+        ('MISMATCH',  r'.'),
+        )
 
-RE_TOKEN_SPEC = re.compile('|'.join('(?P<{}>{})'.format(*pair) for pair in TOKEN_SPEC))
+RE_TOKEN_SPEC = re.compile(
+        '|'.join('(?P<{}>{})'.format(*pair) for pair in TOKEN_SPEC))
 
 
 Token = namedtuple('Token', ['type', 'value', 'column'])
@@ -34,6 +35,6 @@ def tokenize(code):
             continue
         elif kind == 'MISMATCH':
             raise ParseError('{}\n{}\nUnexpected token'.format(
-                code, ' ' * (column + line_start) + '^' ))
+                code, ' ' * (column + line_start) + '^'))
         yield Token(kind, value, column)
 
