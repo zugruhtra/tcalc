@@ -12,7 +12,7 @@ def get_args():
     parser.formatter_class = argparse.RawDescriptionHelpFormatter
     parser.description = 'Calculate with Time Expressions'
     parser.add_argument('expr', type=str,
-                        help='a time expression')
+                        help='a time expression. Use - to read from stdin')
     parser.add_argument('--postfix', '-p', action='store_true',
                         help='evaluate postfix expression')
     return parser.parse_args()
@@ -23,7 +23,7 @@ def get_args():
 
 def main():
     args = get_args()
-    expr = tokenize(args.expr)
+    expr = args.expr if args.expr != '-' else sys.stdin.read()
 
     if args.postfix:
         calc = calc_postfix
@@ -31,7 +31,7 @@ def main():
         calc = calc_infix
 
     try:
-        result = calc(expr)
+        result = calc(tokenize(expr))
     except ParseError as err:
         sys.stderr.write('{}\n'.format(err))
         return 1
