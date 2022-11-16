@@ -1,8 +1,8 @@
 import re
 from collections import namedtuple
 
-from .exception import ParseError
-from .expression import Time
+from tcalc.exception import ParseError
+from tcalc.expression import Time
 
 
 TOKEN_SPEC = (

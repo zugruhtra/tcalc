@@ -1,9 +1,9 @@
 import sys
 import argparse
 
-from .token import tokenize
-from .calc import (calc_infix, calc_postfix)
-from .exception import ParseError
+from tcalc.token import tokenize
+from tcalc.calc import (calc_infix, calc_postfix)
+from tcalc.exception import ParseError
 
 
 def get_args():

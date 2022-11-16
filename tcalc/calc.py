@@ -1,4 +1,4 @@
-from .exception import ParseError
+from tcalc.exception import ParseError
 
 
 PRECEDENCE = {
