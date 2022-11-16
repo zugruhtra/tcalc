@@ -11,10 +11,19 @@ def get_args():
     parser.prog = 'tcalc'
     parser.formatter_class = argparse.RawDescriptionHelpFormatter
     parser.description = 'Calculate with Time Expressions'
-    parser.add_argument('expr', type=str,
-                        help='a time expression. Use - to read from stdin')
-    parser.add_argument('--postfix', '-p', action='store_true',
-                        help='evaluate postfix expression')
+
+    parser.add_argument(
+        'expr',
+        type=str,
+        help='a time expression. Use - to read from stdin'
+    )
+
+    parser.add_argument(
+        '--postfix', '-p',
+        action='store_true',
+        help='evaluate postfix expression'
+    )
+
     return parser.parse_args()
 
 
@@ -40,6 +49,7 @@ def main():
         return 2
 
     sys.stdout.write('{}'.format(result))
+
     return 0
 
 

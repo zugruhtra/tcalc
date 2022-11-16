@@ -6,16 +6,19 @@ from tcalc.expression import Time
 
 
 TOKEN_SPEC = (
-        ('TIME',      r'\d*:\d*:\d*'),
-        ('NUMBER',    r'\d+(\.\d*)?'),
-        ('OPERATOR',  r'[+\-*/]'),
-        ('SEPERATOR', r'[\(\)]'),
-        ('SKIP',      r'[ \t]+'),
-        ('MISMATCH',  r'.'),
-        )
+    ('TIME',      r'\d*:\d*:\d*'),
+    ('NUMBER',    r'\d+(\.\d*)?'),
+    ('OPERATOR',  r'[+\-*/]'),
+    ('SEPERATOR', r'[\(\)]'),
+    ('SKIP',      r'[ \t]+'),
+    ('MISMATCH',  r'.'),
+)
 
 RE_TOKEN_SPEC = re.compile(
-        '|'.join('(?P<{}>{})'.format(*pair) for pair in TOKEN_SPEC))
+    '|'.join(
+        '(?P<{}>{})'.format(*pair) for pair in TOKEN_SPEC
+    )
+)
 
 
 Token = namedtuple('Token', ['type', 'value', 'column'])
