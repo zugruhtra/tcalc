@@ -2,11 +2,11 @@ from tcalc.exception import ParseError
 
 
 PRECEDENCE = {
-        '+': 1,
-        '-': 1,
-        '*': 2,
-        '/': 2,
-        }
+    '+': 1,
+    '-': 1,
+    '*': 2,
+    '/': 2,
+}
 
 
 def precedenc(token):
@@ -40,7 +40,8 @@ def bin_compute(left, operator, right):
         return left / right
     else:
         raise NotImplementedError(
-                'Operator "{}" not implemented'.format(operator))
+            'Operator "{}" not implemented'.format(operator)
+        )
 
 
 def shunting_yard(expr):
