@@ -1,4 +1,5 @@
 import setuptools
+from Cython.Build import cythonize
 
 from tcalc import (
         __description__,
@@ -33,5 +34,7 @@ setuptools.setup(
             "Programming Language :: Python :: 3",
             "Operating System :: OS Independent",
             ],
+        ext_modules=cythonize('tcalc/cli.py'),
+        zip_safe=False,
         )
 
