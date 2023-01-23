@@ -1,4 +1,4 @@
-import setuptools
+import setuptools  # type: ignore
 
 from tcalc import (
     __description__,
