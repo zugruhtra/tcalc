@@ -1,5 +1,3 @@
-
-
 class Time:
     """
     TIME EXPRESSION
@@ -45,12 +43,12 @@ class Time:
         = 00:11:06
     """
 
-    def __init__(self, ts='::'):
-        t = ts.split(':')
+    def __init__(self, ts="::"):
+        t = ts.split(":")
         self.hour = int(t[0]) if t[0] else 0
         self.minute = int(t[1]) if t[1] else 0
         self.second = int(t[2]) if t[2] else 0
-        self.fmt = '{:0>2}:{:0>2}:{:0>2}'
+        self.fmt = "{:0>2}:{:0>2}:{:0>2}"
 
     def time2sec(self):
         r = 0
@@ -86,7 +84,7 @@ class Time:
             t = self.time2sec()
             return self.sec2time(int(t * other))
         else:
-            raise ValueError('Unsupported operand {}'.format(other))
+            raise ValueError("Unsupported operand {}".format(other))
 
     __rmul__ = __mul__
 
@@ -99,13 +97,12 @@ class Time:
             t2 = other.time2sec()
             return t1 / t2
         else:
-            raise ValueError('Unsupported operand {}'.format(other))
+            raise ValueError("Unsupported operand {}".format(other))
 
     def __rtruediv__(self, other):
-        raise ValueError('Divison not allowed for {}'.format(other))
+        raise ValueError("Divison not allowed for {}".format(other))
 
     def __eq__(self, other):
         if isinstance(other, Time):
             return self.time2sec() == other.time2sec()
         return False
-
