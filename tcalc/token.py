@@ -1,43 +1,73 @@
-import re
-from collections import namedtuple
-
-from tcalc.exception import ParseError
-from tcalc.expression import Time
+from enum import Enum, auto
+from typing import NamedTuple
 
 
-TOKEN_SPEC = (
-    ('TIME',      r'\d*:\d*:\d*'),
-    ('NUMBER',    r'\d+(\.\d*)?'),
-    ('OPERATOR',  r'[+\-*/]'),
-    ('SEPERATOR', r'[\(\)]'),
-    ('SKIP',      r'[ \t]+'),
-    ('MISMATCH',  r'.'),
-)
+class TokenType(Enum):
+    # Numbers
+    ZERO = auto()
+    ONE = auto()
+    TWO = auto()
+    THREE = auto()
+    FOUR = auto()
+    FIVE = auto()
+    SIX = auto()
+    SEVEN = auto()
+    EIGHT = auto()
+    NINE = auto()
+    # Operators
+    PLUS = auto()
+    MINUS = auto()
+    MULT = auto()
+    DIV = auto()
+    # Parenthesis
+    LPAREN = auto()
+    RPAREN = auto()
+    # Seperators
+    DOT = auto()
+    # EOF
+    EOF = auto()
 
-RE_TOKEN_SPEC = re.compile(
-    '|'.join(
-        '(?P<{}>{})'.format(*pair) for pair in TOKEN_SPEC
+
+class LUT:
+    Char2Token = {
+        "0": TokenType.ZERO,
+        "1": TokenType.ONE,
+        "2": TokenType.TWO,
+        "3": TokenType.THREE,
+        "4": TokenType.FOUR,
+        "5": TokenType.FIVE,
+        "6": TokenType.SIX,
+        "7": TokenType.SEVEN,
+        "8": TokenType.EIGHT,
+        "9": TokenType.NINE,
+        "+": TokenType.PLUS,
+        "-": TokenType.MINUS,
+        "*": TokenType.MULT,
+        "/": TokenType.DIV,
+        "(": TokenType.LPAREN,
+        ")": TokenType.RPAREN,
+        ".": TokenType.DOT,
+    }
+
+    Token2Char = {v: k for k, v in Char2Token.items()}
+
+
+class Token(NamedTuple):
+    type: TokenType
+    value: str
+    column: int
+
+
+def is_numb(token: Token) -> bool:
+    return token.type in (
+        TokenType.ZERO,
+        TokenType.ONE,
+        TokenType.TWO,
+        TokenType.THREE,
+        TokenType.FOUR,
+        TokenType.FIVE,
+        TokenType.SIX,
+        TokenType.SEVEN,
+        TokenType.EIGHT,
+        TokenType.NINE,
     )
-)
-
-
-Token = namedtuple('Token', ['type', 'value', 'column'])
-
-
-def tokenize(code):
-    line_start = 0
-    for match in RE_TOKEN_SPEC.finditer(code):
-        kind = match.lastgroup
-        value = match.group()
-        column = match.start() - line_start
-        if kind == 'TIME':
-            value = Time(value)
-        elif kind == 'NUMBER':
-            value = float(value) if '.' in value else int(value)
-        elif kind == 'SKIP':
-            continue
-        elif kind == 'MISMATCH':
-            raise ParseError('{}\n{}\nUnexpected token'.format(
-                code, ' ' * (column + line_start) + '^'))
-        yield Token(kind, value, column)
-
