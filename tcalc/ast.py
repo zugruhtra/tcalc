@@ -30,3 +30,13 @@ class Number(AST):
 
     def __str__(self) -> str:
         return f"Numb({self.value})"
+
+
+class Time(AST):
+    def __init__(self, hours: str, minutes: str, seconds: str) -> None:
+        self.hours = hours if hours else "0"
+        self.minutes = minutes if minutes else "0"
+        self.seconds = seconds if seconds else "0"
+
+    def __str__(self) -> str:
+        return f"Time({self.hours}, {self.minutes}, {self.seconds})"

@@ -24,6 +24,7 @@ class TokenType(Enum):
     RPAREN = auto()
     # Seperators
     DOT = auto()
+    COLON = auto()
     # EOF
     EOF = auto()
 
@@ -47,6 +48,7 @@ class LUT:
         "(": TokenType.LPAREN,
         ")": TokenType.RPAREN,
         ".": TokenType.DOT,
+        ":": TokenType.COLON,
     }
 
     Token2Char = {v: k for k, v in Char2Token.items()}

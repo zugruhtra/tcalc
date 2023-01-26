@@ -1,6 +1,21 @@
+"""
+Expression       := Term, { ("+" | "-"), Term } ;
+Term             := Factor, { ("*" | "/") Factor } ;
+Factor           := { "-" | "+" } Factor | ValueLiteral | "(", Expression, ")" ;
+
+ValueLiteral     := TimeLiteral | NumberLiteral ;
+TimeLiteral      := { Digit }, ":", { Digit }, ":" { Digit };
+NumberLiteral    := Integer | Float
+
+Float            := NonZeroDigit, { Digit }, ".", Digit, { Digit } ;
+Integer          := NonZeroDigit, { Digit } | "0" ;
+Digit            := NonZeroDigit | "0" ;
+NonZeroDigit     := "1" | "2" | "3" | "4" | "5" | "6" | "7" | "8" | "9" ;
+
+"""
 from typing import Protocol, cast
 
-from tcalc.ast import AST, BinaryOperator, UnaryOperator, Number
+from tcalc.ast import AST, BinaryOperator, Time, UnaryOperator, Number
 from tcalc.errors import ParserError
 from tcalc.token import Token, LUT, TokenType, is_numb
 
@@ -53,8 +68,12 @@ class Parser:
             token = self._lexer.consume()
             if token.type is not TokenType.RPAREN:
                 raise ParserError("unmatched left parenthesis", token.column)
-        elif is_numb(self._lexer.peek()) or self._lexer.peek().type is TokenType.DOT:
-            node = self._parse_numeric_literal()
+        elif (
+            is_numb(self._lexer.peek())
+            or self._lexer.peek().type is TokenType.DOT
+            or self._lexer.peek().type is TokenType.COLON
+        ):
+            node = self._parse_value_literal()
         elif self._lexer.peek().type in (TokenType.MINUS, TokenType.PLUS):
             sign = self._lexer.consume()
             node = cast(AST, UnaryOperator(op=sign, expr=self._parse_factor()))
@@ -63,7 +82,48 @@ class Parser:
 
         return node
 
-    def _parse_numeric_literal(self) -> Number:
+    def _parse_value_literal(self) -> Number | Time:
+        token = self._lexer.peek()
+
+        if token.type is TokenType.DOT:
+            return self._parse_numeric_literal()
+
+        if token.type is TokenType.COLON:
+            return self._parse_time_literal()
+
+        if is_numb(token):
+            numb = self._parse_number()
+
+        token = self._lexer.peek()
+        if token.type is not TokenType.COLON:
+            return numb
+
+        hours = numb.value
+        time = self._parse_time_literal()
+        time.hours = hours
+
+        return time
+
+    def _parse_time_literal(self) -> Time:
+        hours: list[str] = []
+        minutes: list[str] = []
+        seconds: list[str] = []
+        while is_numb(self._lexer.peek()):
+            hours.append(self._parse_digit())
+        self._lexer.consume()  # colon
+        while is_numb(self._lexer.peek()):
+            minutes.append(self._parse_digit())
+        self._lexer.consume()  # colon
+        while is_numb(self._lexer.peek()):
+            seconds.append(self._parse_digit())
+        value = Time(
+            hours="".join(hours),
+            minutes="".join(minutes),
+            seconds="".join(seconds),
+        )
+        return value
+
+    def _parse_numeric_literal(self) -> Number | Time:
         num = self._parse_number()
         return num
 
