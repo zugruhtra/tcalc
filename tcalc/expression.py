@@ -47,11 +47,14 @@ class Time:
         = 00:11:06
     """
 
-    def __init__(self, hours: Decimal, minutes: Decimal, seconds: Decimal):
+    def __init__(
+        self, hours: Decimal, minutes: Decimal, seconds: Decimal, sign: bool = False
+    ):
         self.hour = hours
         self.minute = minutes
         self.second = seconds
         self.fmt = "{:0>2}:{:0>2}:{:0>2}"
+        self.sign = sign
 
     def time2sec(self) -> Decimal:
         r = Decimal("0")
@@ -67,19 +70,42 @@ class Time:
 
     def __str__(self) -> str:
         t = self.sec2time(self.time2sec())  # avoid malformed time
-        return self.fmt.format(t.hour, t.minute, t.second)
+        s = self.fmt.format(t.hour, t.minute, t.second)
+        if self.sign:
+            s = "-" + s
+        return s
 
     __repr__ = __str__
 
     def __add__(self, other: "Time") -> "Time":
         t1 = self.time2sec()
         t2 = other.time2sec()
-        return self.sec2time(t1 + t2)
+        if self.sign:
+            if other.sign:
+                td = -t1 - t2
+            else:
+                td = -t1 + t2
+        else:
+            if other.sign:
+                td = t1 - t2
+            else:
+                td = t1 + t2
+        if td < 0:
+            tnew = self.sec2time(-td)
+            tnew.sign = td < 0
+        else:
+            tnew = self.sec2time(td)
+        return tnew
 
     def __sub__(self, other: "Time") -> "Time":
         t1 = self.time2sec()
         t2 = other.time2sec()
-        return self.sec2time(t1 - t2)
+        if t2 > t1:
+            tnew = self.sec2time(t2 - t1)
+            tnew.sign = True
+        else:
+            tnew = self.sec2time(t1 - t2)
+        return tnew
 
     def __mul__(self, other: Decimal) -> "Time":
         t = self.time2sec()
@@ -102,9 +128,10 @@ class Time:
         raise ValueError("Divison not allowed for {}".format(other))
 
     def __neg__(self) -> "Time":
+        self.sign = not self.sign
         return self
 
     def __eq__(self, other: Any) -> bool:
         if isinstance(other, Time):
-            return self.time2sec() == other.time2sec()
+            return self.time2sec() == other.time2sec() and self.sign == other.sign
         return False
