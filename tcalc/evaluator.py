@@ -23,13 +23,13 @@ class Evaluator:
     def visit(self, ast: AST) -> Decimal | TimeExpr:
         if type(ast) is BinaryOperator:
             if ast.op.type is TokenType.PLUS:
-                return self.visit(ast.left) + self.visit(ast.right)
+                return self.visit(ast.left) + self.visit(ast.right)  # type: ignore
             elif ast.op.type is TokenType.MINUS:
-                return self.visit(ast.left) - self.visit(ast.right)
+                return self.visit(ast.left) - self.visit(ast.right)  # type: ignore
             elif ast.op.type is TokenType.MULT:
-                return self.visit(ast.left) * self.visit(ast.right)
+                return self.visit(ast.left) * self.visit(ast.right)  # type: ignore
             elif ast.op.type is TokenType.DIV:
-                return self.visit(ast.left) / self.visit(ast.right)
+                return self.visit(ast.left) / self.visit(ast.right)  # type: ignore
             else:
                 assert False, "unreachable line"
         elif type(ast) is UnaryOperator:
